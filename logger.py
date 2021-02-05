@@ -44,6 +44,11 @@ log_mapping = {
     "debug": logger.debug,
     "error": logger.error
 }
+'''
+    info:默认会添加到测试报告中，也会记录到本地日志文件中
+    debug:不会添加到测试报告中，但是会记录到本地日志文件中
+    error:会添加到测试报告中，也会记录到本地日志文件中
+'''
 
 
 def rfic_base(level, *args, **kwargs):
@@ -68,7 +73,8 @@ def rfic_base(level, *args, **kwargs):
         elif log == False:  # 如果log=True，就添加到一个全局日志记录列表中
             pass
         else:  # 默认自动添加
-            Constants.EACH_CASE_LOG.append(pstr)
+            if level != "debug":
+                Constants.EACH_CASE_LOG.append(pstr)
     except:
         pass
     # 如果kwargs里面有log参数，那么把日志追加到log中  -e

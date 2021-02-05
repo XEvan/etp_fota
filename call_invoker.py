@@ -3,7 +3,6 @@ import json
 import os
 import shutil
 import time
-from functools import partial
 
 from jinja2 import Environment, FileSystemLoader
 
@@ -48,7 +47,6 @@ class CallInvoker:
         '''
         远程调用主要调度
         '''
-
         # self.start()
         test_case_dict = get_totest_classes()
         class_item = test_case_dict[params]["class_item"](params)  # 实例化用例
