@@ -1,0 +1,63 @@
+<?xml version="1.0" ?><EPT>
+    <ApplicationConfig>
+        <name comments="Application Name">OTAEthernetTest</name>
+    </ApplicationConfig>
+    <EthConfig>
+        <ETH1 enabled="True">
+            <EthName ecuName="ECU0">device100</EthName>
+            <AppChannel comments="Application Channel">1</AppChannel>
+            <HwChannel comments="Index of hw Channel">0</HwChannel>
+            <IP comments="target's IP connected to this point">192.168.0.100</IP>
+            <Port comments="target's Port connected to this point">49100</Port>
+        </ETH1>
+        <ETH2 enabled="True">
+            <EthName ecuName="ECU1">device102</EthName>
+            <AppChannel comments="Application Channel">2</AppChannel>
+            <HwChannel comments="Index of hw Channel">1</HwChannel>
+            <IP comments="target's IP connected to this point">192.168.0.102</IP>
+            <Port comments="target's Port connected to this point">49101</Port>
+        </ETH2>
+        <ETH3 enabled="True">
+            <EthName ecuName="ECU2">device3</EthName>
+            <AppChannel comments="Application Channel">3</AppChannel>
+            <HwChannel comments="Index of hw Channel">2</HwChannel>
+            <IP comments="target's IP connected to this point">192.168.0.100</IP>
+            <Port comments="target's Port connected to this point">49100</Port>
+        </ETH3>
+        <ETH4 enabled="True">
+            <EthName ecuName="ECU3">device4</EthName>
+            <AppChannel comments="Application Channel">4</AppChannel>
+            <HwChannel comments="Index of hw Channel">3</HwChannel>
+            <IP comments="target's IP connected to this point">192.168.0.102</IP>
+            <Port comments="target's Port connected to this point">49101</Port>
+        </ETH4>
+        <ETH5 enabled="True">
+            <EthName ecuName="ECU4">device5</EthName>
+            <AppChannel comments="Application Channel">5</AppChannel>
+            <HwChannel comments="Index of hw Channel">4</HwChannel>
+            <IP comments="target's IP connected to this point">192.168.0.100</IP>
+            <Port comments="target's Port connected to this point">49100</Port>
+        </ETH5>
+        <ETH6 enabled="True">
+            <EthName ecuName="ECU5">device6</EthName>
+            <AppChannel comments="Application Channel">6</AppChannel>
+            <HwChannel comments="Index of hw Channel">5</HwChannel>
+            <IP comments="target's IP connected to this point">192.168.0.102</IP>
+            <Port comments="target's Port connected to this point">49101</Port>
+        </ETH6>
+        <ETH7 enabled="True">
+            <EthName ecuName="ECU6">device7</EthName>
+            <AppChannel comments="Application Channel">7</AppChannel>
+            <HwChannel comments="Index of hw Channel">6</HwChannel>
+            <IP comments="target's IP connected to this point">192.168.0.100</IP>
+            <Port comments="target's Port connected to this point">49100</Port>
+        </ETH7>
+        <ETH8 enabled="True">
+            <EthName ecuName="ECU7">device8</EthName>
+            <AppChannel comments="Application Channel">8</AppChannel>
+            <HwChannel comments="Index of hw Channel">7</HwChannel>
+            <IP comments="target's IP connected to this point">192.168.0.102</IP>
+            <Port comments="target's Port connected to this point">49101</Port>
+        </ETH8>
+    </EthConfig>
+</EPT>
