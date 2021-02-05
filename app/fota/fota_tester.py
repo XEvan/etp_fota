@@ -19,14 +19,14 @@ class FotaTester:
     def tearDown(self):
         pass
 
-    def generate_result_template(self, route, __func_desc__):
+    def generate_result_template(self, route, func_desc):
         '''
         生成测试报告模板
         '''
         result_dict = {
             "className": route,
             "methodName": "test_main",
-            "description": __func_desc__,
+            "description": func_desc,
             "startTime": time.time(),
             "spendTime": 0,
             "status": True,
