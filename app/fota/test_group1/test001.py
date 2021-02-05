@@ -1,10 +1,8 @@
 from scapy.contrib.automotive.someip import SOMEIP
 
 from app.fota.fota_tester import FotaTester
-from aw_lib.xldriver_lib.xldriver_channelbased_lib.message_recorder import MessageRecorder
 from common.common import RILPrint
-from common.constants import Constants
-from logger import rfic_info, rfic_error
+from logger import rfic_info
 
 debug = True
 
@@ -13,16 +11,7 @@ class Test001(FotaTester):
     __func_desc__ = "这是测试用例1"
 
     def __init__(self, route=""):
-        self.route = route
-
-        # 记录过程日志，写入测试报告中
-        Constants.EACH_CASE_LOG.clear()
-
-        # 生成报告
-        self.result_dict = self.generate_result_template(self.route, self.__func_desc__)
-
-        # 每条用例执行之前，清空消息流
-        MessageRecorder.clear_both()
+        super(Test001, self).__init__(route, self.__func_desc__)
 
     @RILPrint
     def setUp(self):
@@ -80,8 +69,6 @@ class Test001(FotaTester):
             self.xldriver_handle.set_bypass_mac_mode(src, dst)
         # 消息仿真与发送  -e
 
-        rfic_error("没有收到期望消息，测试结束")
-        self.result_dict["status"] = False
         return "success"
 
     @RILPrint
@@ -96,6 +83,6 @@ class Test001(FotaTester):
         rfic_info("台架下电")
 
         # 处理测试报告
-        self.result_process(self.route, self.result_dict)
+        self.result_process(self.result_dict)
 
         return "success"
