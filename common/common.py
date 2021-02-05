@@ -17,11 +17,11 @@ def RILPrint(func):
     from logger import rfic_info
     @wraps(func)
     def ril_print(*args, **kwargs):
-        rfic_info("[Func Call] <%s>开始执行..." % func.__name__)
+        rfic_info("[Func Call] <%s>开始执行..." % func.__name__, log=False)
         res = func(*args, **kwargs)
         args = "" if len(args) == 0 else args
         kwargs = "" if len(kwargs) == 0 else kwargs
-        rfic_info("[Func Call] <%s>%s%s------>%s" % (func.__name__, str(args), str(kwargs), res))
+        rfic_info("[Func Call] <%s>%s%s------>%s" % (func.__name__, str(args), str(kwargs), res), log=False)
         return res
 
     return ril_print

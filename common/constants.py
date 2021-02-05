@@ -9,3 +9,5 @@ class Constants:
     REPORT_HTML_PATH = os.path.join(BASE_DIR, "report_html") # 生成最终报告的路径
     CASES = {}
     LOG_BASE_DIR = os.path.join(BASE_DIR, "ept_logs")
+
+    EACH_CASE_LOG = [] # 记录每一条测试用例的日志信息

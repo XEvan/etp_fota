@@ -34,11 +34,11 @@ class FotaTester:
         }
         return result_dict
 
-    def result_process(self, route, result_dict, log):
+    def result_process(self, route, result_dict):
         '''
         报告后处理
         '''
-        result_dict["log"] = log
+        result_dict["log"] = Constants.EACH_CASE_LOG
         result_dict["spendTime"] = str(round(time.time() - result_dict["startTime"], 3)) + " s"
         result_dict["status"] = "成功" if result_dict["status"] == True else "失败"
         report_name = os.path.join(Constants.REPORT_DIR, "%s.json" % route)
