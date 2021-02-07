@@ -33,7 +33,8 @@ class Test001(FotaTester):
         # src, dst = "device102", "device100"
 
         # 等待具体的消息过来后，开始进行消息的仿真发送
-        rfic_info("等待指定的ABC消息。。。")
+
+        rfic_info("等待指定的s1消息。。。")
         if not debug:
             status, target_params = self.xldriver_handle.get_required_message(src, dst, 0x0100, 0x3b)
             rfic_info("收到期望消息:", str(target_params))

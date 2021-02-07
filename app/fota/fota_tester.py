@@ -2,12 +2,13 @@ import json
 import os
 import time
 
+from app.app import App
 from aw_lib.aw_manager import AwManager
 from aw_lib.xldriver_lib.xldriver_channelbased_lib.message_recorder import MessageRecorder
 from common.constants import Constants
 
 
-class FotaTester:
+class FotaTester(App):
     # 调用VN5640的驱动
     xldriver_handle = AwManager.xldriver_channelbased_manager
 

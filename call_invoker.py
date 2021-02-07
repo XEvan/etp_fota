@@ -7,7 +7,7 @@ import time
 from jinja2 import Environment, FileSystemLoader
 
 from common.constants import Constants
-from load_app import get_totest_classes
+from load_app import load_modules_from_path
 from logger import rfic_info
 from rpc_package.callinvoker_pb2 import CallResponse
 
@@ -48,7 +48,7 @@ class CallInvoker:
         远程调用主要调度
         '''
         # self.start()
-        test_case_dict = get_totest_classes()
+        test_case_dict = load_modules_from_path()
         class_item = test_case_dict[params]["class_item"](params)  # 实例化用例
         class_item.setUp()  # 一条用例初始设置
         class_item.run()  # 一条用例主逻辑
@@ -64,7 +64,7 @@ class CallInvoker:
 
         # 动态加载现有的测试用例
         if test_case_dict is None:
-            test_case_dict = get_totest_classes()
+            test_case_dict = load_modules_from_path()
         for route, item in test_case_dict.items():
             class_item = item["class_item"](route)  # 实例化用例
             class_item.setUp()  # 一条用例初始设置

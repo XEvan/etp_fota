@@ -6,7 +6,7 @@ from PyQt5.QtWidgets import QMainWindow, QApplication, QPushButton, QMessageBox,
 
 from call_invoker import CallInvoker
 from graphic_ui.vn5640_settings_controller import VN5640SettingController
-from load_app import get_totest_classes
+from load_app import load_modules_from_path
 
 
 class MainFrame(QMainWindow):
@@ -22,7 +22,7 @@ class MainFrame(QMainWindow):
         self.listWidget.resize(500, 420)
 
 
-        self.test_case_dict = get_totest_classes()
+        self.test_case_dict = load_modules_from_path()
         self.insert(list(self.test_case_dict.keys()))
 
         self.vn5640SettingBtn = QPushButton("VN5640配置", self)

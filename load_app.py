@@ -2,10 +2,10 @@ import inspect
 import os
 import sys
 
-from app.fota.fota_tester import FotaTester
+from app.app import App
 
 
-def get_totest_classes(root="app"):
+def load_modules_from_path(root="app", class_name=App):
     '''
     动态加载app目录下的测试用例
     :param root: 指定的目录
@@ -20,7 +20,7 @@ def get_totest_classes(root="app"):
                 continue
             # 获取文件所属目录
             # 获取文件路径
-            module_name = os.path.join(root, file).replace("\\", ".").strip(".py")
+            module_name = os.path.join(root, file).replace("\\", ".").replace(".py", "")
             module_name = module_name[module_name.index("app"):]  # 以app为首，用作包的引入
             __import__(module_name, globals(), locals(), [], 0)
             module = sys.modules[module_name]
@@ -28,11 +28,13 @@ def get_totest_classes(root="app"):
             for name in module_attrs:
                 var_obj = getattr(module, name)
                 if inspect.isclass(var_obj):
-                    if issubclass(var_obj, FotaTester) and var_obj.__name__ != FotaTester.__name__:
+                    if issubclass(var_obj, class_name) and var_obj.__name__ != class_name.__name__:
                         key = module_name + "." + str(var_obj.__name__)
-                        desc_info = getattr(var_obj, "__func_desc__") if hasattr(var_obj, "__func_desc__") else "没有描述信息"
-                        to_test_classes_dict[key] = {
-                            "desc_info": desc_info,
-                            "class_item": var_obj
-                        }
+                        if hasattr(var_obj, "__func_desc__"):
+                            # desc_info = getattr(var_obj, "__func_desc__") if hasattr(var_obj, "__func_desc__") else "没有描述信息"
+                            desc_info = getattr(var_obj, "__func_desc__")
+                            to_test_classes_dict[key] = {
+                                "desc_info": desc_info,
+                                "class_item": var_obj
+                            }
     return to_test_classes_dict
