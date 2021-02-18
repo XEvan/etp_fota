@@ -99,4 +99,4 @@ class Reporter:
 
             html_content = template.render(context)
             f.write(html_content)
-        os.startfile(finalPath)
+        os.startfile(finalPath)  # 打开生成的最终报告目录
