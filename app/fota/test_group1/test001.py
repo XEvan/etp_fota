@@ -2,7 +2,7 @@ from scapy.contrib.automotive.someip import SOMEIP
 
 from app.fota.fota_tester import FotaTester
 from common.common import RILPrint
-from logger import rfic_info
+from logger import rfic_info, rfic_error
 
 debug = True
 
@@ -69,6 +69,9 @@ class Test001(FotaTester):
         if not debug:
             self.xldriver_handle.set_bypass_mac_mode(src, dst)
         # 消息仿真与发送  -e
+
+        rfic_error("结果不符合预期")
+        self.reporter.set_test_status(False)
 
         return True
 

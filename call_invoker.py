@@ -78,10 +78,9 @@ class CallInvoker:
                 class_item.tearDown()  # 一条用例的收尾
                 class_item.reporter.result_process()  # 一条用例执行完成后，生成一下该用例的报告
             except:
-                Constants.EACH_CASE_LOG.append(str(traceback.format_exc()))  # 添加失败原因，会记录在报告中
+                rfic_error("[%s]执行失败!\n失败原因:%s" % (str(route), str(traceback.format_exc())))  # 会记录到测试报告中
                 class_item.reporter.set_test_status(False)  # 当前用例失败
                 class_item.reporter.result_process()  # 一条用例执行完成后，生成一下该用例的报告
-                rfic_error("[%s]执行失败!\n失败原因:<%s>" % (str(route), str(traceback.format_exc())))
         # 动态加载现有的测试用例  -e
 
         # 所有测试用例执行完成后执行一次，比如生成测试报告
