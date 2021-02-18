@@ -3,13 +3,13 @@ import json
 import os
 import shutil
 import time
+import traceback
 
 from jinja2 import Environment, FileSystemLoader
 
 from common.constants import Constants
 from load_app import load_modules_from_path
-from logger import rfic_info
-from rpc_package.callinvoker_pb2 import CallResponse
+from logger import rfic_info, rfic_error
 
 
 class CallInvoker:
@@ -24,6 +24,10 @@ class CallInvoker:
             rfic_info(line.replace("\n", ""))
 
     def call(self, route, params, description):
+        '''
+        远程调用的接口
+        '''
+        from rpc_package.callinvoker_pb2 import CallResponse
         if hasattr(self, route):
             new_func = getattr(self, route)
             new_func(params)
@@ -31,17 +35,6 @@ class CallInvoker:
             return CallResponse(status="Pass", value="", message="")
         else:
             return CallResponse(status="Fail", value="", message="没有找到测试用例!")
-
-    def start(self, params=None):
-        # 所有用例开始执行之前的初始化动作
-        rfic_info("开始执行测试用例...")
-
-        # 生成测试报告文件夹  -s
-        Constants.REPORT_DIR = os.path.join(Constants.REPORT_BASE_DIR,
-                                            datetime.datetime.now().strftime('%Y-%m-%d_%H-%M-%S'))
-        if not os.path.exists(Constants.REPORT_DIR):
-            os.makedirs(Constants.REPORT_DIR)
-        # 生成测试报告文件夹  -e
 
     def run(self, params=None):
         '''
@@ -55,22 +48,43 @@ class CallInvoker:
         class_item.tearDown()  # 一条用例执行完
         # self.stop()
 
+    def start(self, params=None):
+        # 所有用例开始执行之前的初始化动作
+        rfic_info("开始执行测试用例...")
+
+        # 生成测试报告文件夹  -s
+        Constants.REPORT_DIR = os.path.join(Constants.REPORT_BASE_DIR,
+                                            datetime.datetime.now().strftime('%Y-%m-%d_%H-%M-%S'))
+        if not os.path.exists(Constants.REPORT_DIR):
+            os.makedirs(Constants.REPORT_DIR)
+        # 生成测试报告文件夹  -e
+
     def main(self, test_case_dict=None):
         '''
         主要调度
         '''
 
+        # 所有测试用例执行之前执行一次，比如初始化测试报告的路径
         self.start()
 
-        # 动态加载现有的测试用例
-        if test_case_dict is None:
+        # 动态加载现有的测试用例  -s
+        if test_case_dict is None:  # 如果没有传用例，默认加载全部用例进行执行(调试使用)
             test_case_dict = load_modules_from_path()
         for route, item in test_case_dict.items():
             class_item = item["class_item"](route)  # 实例化用例
-            class_item.setUp()  # 一条用例初始设置
-            class_item.run()  # 一条用例主逻辑
-            class_item.tearDown()  # 一条用例执行完
+            try:
+                class_item.setUp()  # 一条用例的初始化
+                class_item.run()  # 一条用例的主逻辑
+                class_item.tearDown()  # 一条用例的收尾
+                class_item.reporter.result_process()  # 一条用例执行完成后，生成一下该用例的报告
+            except:
+                Constants.EACH_CASE_LOG.append(str(traceback.format_exc()))  # 添加失败原因，会记录在报告中
+                class_item.reporter.set_test_status(False)  # 当前用例失败
+                class_item.reporter.result_process()  # 一条用例执行完成后，生成一下该用例的报告
+                rfic_error("[%s]执行失败!\n失败原因:<%s>" % (str(route), str(traceback.format_exc())))
+        # 动态加载现有的测试用例  -e
 
+        # 所有测试用例执行完成后执行一次，比如生成测试报告
         self.stop()
 
     def stop(self, params=None):

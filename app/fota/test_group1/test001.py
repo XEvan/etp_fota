@@ -25,7 +25,7 @@ class Test001(FotaTester):
             self.xldriver_handle.eth_recv_monitor()
         # 台架上电
         rfic_info("台架上电")
-        return "success"
+        return True
 
     @RILPrint
     def run(self):
@@ -70,7 +70,7 @@ class Test001(FotaTester):
             self.xldriver_handle.set_bypass_mac_mode(src, dst)
         # 消息仿真与发送  -e
 
-        return "success"
+        return True
 
     @RILPrint
     def tearDown(self):
@@ -83,7 +83,4 @@ class Test001(FotaTester):
         # 台架下电
         rfic_info("台架下电")
 
-        # 处理测试报告
-        self.result_process(self.result_dict)
-
-        return "success"
+        return True
