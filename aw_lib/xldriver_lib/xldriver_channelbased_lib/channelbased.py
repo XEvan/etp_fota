@@ -15,7 +15,7 @@ from logger import rfic_error, rfic_info
 clr.FindAssembly(os.path.join(Constants.BASE_DIR, "bin", "vxlapi_NET.dll"))
 clr.AddReference(os.path.join(Constants.BASE_DIR, "bin", "vxlapi_NET"))
 from vxlapi_NET import *
-import vxlapi_NET as net_driver
+import vxlapi_NET
 
 
 class XLDefine(XLDefine): pass
@@ -31,7 +31,7 @@ python_version = platform.architecture()[0]  # 32bit or 64bit
 
 
 class ChannelBased:
-    net_driver = net_driver.XLDriver()
+    net_driver = vxlapi_NET.XLDriver()
 
     # 动态加载32bit或者64bit的dll(根据python的版本加载)
     dll_file = "vxlapi64.dll" if "64" in str(python_version) else "vxlapi.dll"
