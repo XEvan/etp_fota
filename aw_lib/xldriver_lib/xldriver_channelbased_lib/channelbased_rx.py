@@ -36,6 +36,7 @@ class ChannelBasedRx(ChannelBased):
         receivedEvent = T_XL_ETH_EVENT()
         while True:  # 在时间内判读有没有消息读到
             waitResult = self.net_driver.XL_WaitForSingleObject(self.notificationHandle.value, 1000)
+            # rc = win32event.WaitForSingleObject(self.notificationHandle.value, 1000)
             if waitResult != XLDefine.WaitResults.WAIT_TIMEOUT and waitResult != -1:
                 ethReceiveStatus = XLDefine.XL_Status.XL_SUCCESS
                 while ethReceiveStatus != XLDefine.XL_Status.XL_ERR_QUEUE_IS_EMPTY:

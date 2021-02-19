@@ -10,6 +10,7 @@ class FotaTester(App):
     xldriver_handle = AwManager.xldriver_channelbased_manager
 
     def __init__(self, route="", desc=""):
+        # 每条测试用例都会走一次
         self.reporter = Reporter(route, desc)  # 实例化报告类
         Constants.EACH_CASE_LOG.clear()  # 每条测试用例之前，清空测试过程信息
         MessageRecorder.clear_both()  # 每条用例执行之前，清空消息流

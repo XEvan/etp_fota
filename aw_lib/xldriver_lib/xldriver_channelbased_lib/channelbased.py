@@ -2,6 +2,7 @@ import array
 import ctypes
 import inspect
 import os
+import platform
 from ctypes import *
 from xml.dom.minidom import parse
 
@@ -23,9 +24,18 @@ class XLDefine(XLDefine): pass
 class XLClass(XLClass): pass
 
 
+# platform.architecture()：获取python版本是32位还是64位
+#   64位：('64bit', 'WindowsPE')
+#   32位：('32bit', 'WindowsPE')
+python_version = platform.architecture()[0]  # 32bit or 64bit
+
+
 class ChannelBased:
     net_driver = net_driver.XLDriver()
-    dll = cdll.LoadLibrary(os.path.join(Constants.BASE_DIR, "bin", "vxlapi64.dll"))
+
+    # 动态加载32bit或者64bit的dll(根据python的版本加载)
+    dll_file = "vxlapi64.dll" if "64" in str(python_version) else "vxlapi.dll"
+    dll = cdll.LoadLibrary(os.path.join(Constants.BASE_DIR, "bin", dll_file))
 
     DRIVER_INIT_STATUS = False
 
@@ -126,6 +136,14 @@ class ChannelBased:
         # 打开驱动  -e
 
     def set_appl_config(self):
+        '''
+        为Application设置applicationName
+        指定该applicationName对应的哪个VN5640设备，以及该VN5640的总线类型
+        当前仅支持 1 个VN5640
+        e.g.
+            AppName1:VN5640 1
+            AppName2:VN5640 2
+        '''
         for ethName, value_dict in self.appChannel.items():
             status = self.dll.xlSetApplConfig(self.appName,
                                               value_dict["appChannel"],
@@ -224,7 +242,6 @@ class ChannelBased:
                                          ChannelBasedConstants.XL_ETH_BYPASS_MACCORE)
         rfic_info("set bypass mac:", status)
         self.activate_channel()
-
 
     def driver_init(self):
         if not ChannelBased.DRIVER_INIT_STATUS:
