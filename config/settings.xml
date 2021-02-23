@@ -1,6 +1,7 @@
 <?xml version="1.0" ?><EPT>
     <ApplicationConfig>
-        <name comments="Application Name">OTAEthernetTest</name>
+        <EthAppName comments="Ethernet Application Name">OTAEthernetTest</EthAppName>
+        <CanAppName comments="CAN Application Name">OTACANTest</CanAppName>
     </ApplicationConfig>
     <EthConfig>
         <ETH1 enabled="True">
@@ -60,4 +61,16 @@
             <Port comments="target's Port connected to this point">49101</Port>
         </ETH8>
     </EthConfig>
+    <CanConfig>
+        <CAN1 enabled="True">
+            <CanName>c001</CanName>
+            <AppChannel comments="Application Channel">1</AppChannel>
+            <HwChannel comments="Index of hw Channel">0</HwChannel>
+        </CAN1>
+        <CAN2 enabled="True">
+            <CanName>c002</CanName>
+            <AppChannel comments="Application Channel">2</AppChannel>
+            <HwChannel comments="Index of hw Channel">1</HwChannel>
+        </CAN2>
+    </CanConfig>
 </EPT>

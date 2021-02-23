@@ -1,15 +1,11 @@
 import datetime
-import json
 import os
-import shutil
-import time
 import traceback
-
-from jinja2 import Environment, FileSystemLoader
 
 from common.constants import Constants
 from load_app import load_modules_from_path
 from logger import rfic_info, rfic_error
+from reporter import Reporter
 
 
 class CallInvoker:
@@ -24,9 +20,9 @@ class CallInvoker:
             rfic_info(line.replace("\n", ""))
 
     def call(self, route, params, description):
-        '''
+        """
         远程调用的接口
-        '''
+        """
         from rpc_package.callinvoker_pb2 import CallResponse
         if hasattr(self, route):
             new_func = getattr(self, route)
@@ -37,9 +33,9 @@ class CallInvoker:
             return CallResponse(status="Fail", value="", message="没有找到测试用例!")
 
     def run(self, params=None):
-        '''
+        """
         远程调用主要调度
-        '''
+        """
         # self.start()
         test_case_dict = load_modules_from_path()
         class_item = test_case_dict[params]["class_item"](params)  # 实例化用例
@@ -60,9 +56,16 @@ class CallInvoker:
         # 生成测试报告文件夹  -e
 
     def main(self, test_case_dict=None):
-        '''
-        主要调度
-        '''
+        """
+        主要调度逻辑：
+            step1：start() 所有测试用例执行之前调用一次
+            step2：遍历界面上选中的测试用例
+                sub_step1：setUp() 单条用例初始化
+                sub_step2：run() 单条用例主逻辑
+                sub_step3：tearDown() 单条用例收尾操作
+                sub_step4：result_process() 单条用例测试报告处理
+            step3：stop() 所有测试用例执行完成后调用一次
+        """
 
         # 所有测试用例执行之前执行一次，比如初始化测试报告的路径
         self.start()
@@ -89,65 +92,4 @@ class CallInvoker:
     def stop(self, params=None):
         # 所有用例执行完成后执行的动作
         rfic_info("测试用例执行完成...")
-        self.generate_html()
-
-    def generate_html(self):
-        env = Environment(loader=FileSystemLoader(os.path.join(Constants.BASE_DIR, 'template')))  # 加载模板
-        template = env.get_template('report_template.html')
-
-        report_names = os.listdir(Constants.REPORT_DIR)
-
-        testFail = 0  # 失败数
-        testPass = 0  # 成功数
-        spendTime = 0  # 耗时
-        testResult = []
-        startTime = []
-        for file in report_names:
-            file_path = os.path.join(Constants.REPORT_DIR, file)
-            with open(file_path, "r", encoding="utf-8") as load_f:
-                data = json.load(load_f)
-
-                startTime.append(data.get("startTime", 0))
-
-                st = data.get("spendTime", "0.0 s")
-                if "s" in str(st):
-                    spendTime += float(st.split(" ")[0])
-                else:
-                    spendTime += float(st)
-                testResult.append(data)
-                if "失败" in data.get("status"):
-                    testFail += 1
-                if "成功" in data.get("status"):
-                    testPass += 1
-
-        startTime = [0] if len(startTime) == 0 else startTime
-        startTime = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(min(startTime)))
-        testAll = len(report_names)
-
-        # 新建一个时间文件夹  -s
-        folder = datetime.datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
-        finalPath = os.path.join(Constants.REPORT_HTML_PATH, folder)
-        # if not os.path.exists(finalPath):
-        #     os.makedirs(finalPath)
-        # 新建一个时间文件夹  -e
-        # 拷贝css和js文件  -s
-        if not os.path.exists(finalPath):
-            # 如果目标路径不存在原文件夹的话就拷贝
-            shutil.copytree(os.path.join(Constants.BASE_DIR, "template", "templates"), finalPath)
-        # 拷贝css和js文件  -e
-
-        report_path = os.path.join(finalPath, "index.html")
-        with open(report_path, 'w', encoding='utf-8') as f:
-            context = {
-                "title": "OTA测试报告",
-                "spendTime": spendTime,
-                "startTime": startTime,
-                "testAll": testAll,
-                "testPass": testPass,
-                "testFail": testFail,
-                "testResult": testResult
-            }
-
-            html_content = template.render(context)
-            f.write(html_content)
-        os.startfile(finalPath)
+        Reporter.generate_html()  # 汇总每条测试用例生成的json文件，最终生成html测试报告

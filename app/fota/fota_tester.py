@@ -7,7 +7,7 @@ from reporter import Reporter
 
 class FotaTester(App):
     # 调用VN5640的驱动
-    xldriver_handle = AwManager.xldriver_channelbased_manager
+    xldriver_eth_handle = AwManager.xldriver_channelbased_eth_manager
 
     def __init__(self, route="", desc=""):
         # 每条测试用例都会走一次

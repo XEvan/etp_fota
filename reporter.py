@@ -39,8 +39,11 @@ class Reporter:
         with open(report_name, "w") as dump_f:
             json.dump(self.result_dict, dump_f)
 
-    def generate_html(self):
-        '''所有的测试数据汇总生成一个html的测试报告'''
+    @staticmethod
+    def generate_html():
+        """
+        汇总每条测试用例生成的json文件，最终生成html测试报告
+        """
         env = Environment(loader=FileSystemLoader(os.path.join(Constants.BASE_DIR, 'template')))  # 加载模板
         template = env.get_template('report_template.html')
 

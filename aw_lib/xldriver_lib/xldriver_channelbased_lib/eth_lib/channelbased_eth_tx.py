@@ -8,22 +8,22 @@ from scapy.utils import hexdump
 
 from aw_lib.xldriver_lib.xldriver_channelbased_lib.channelbased import ChannelBased, XLDefine
 from aw_lib.xldriver_lib.xldriver_channelbased_lib.message_recorder import MessageRecorder
-from aw_lib.xldriver_lib.xldriver_channelbased_lib.structures_tx import T_XL_ETH_DATAFRAME_TX
+from aw_lib.xldriver_lib.xldriver_channelbased_lib.eth_lib.structures_tx import T_XL_ETH_DATAFRAME_TX
 from logger import rfic_info
 
 
-class ChannelBasedTx(ChannelBased):
+class ChannelBasedEthTx(ChannelBased):
     def __init__(self):
-        super(ChannelBasedTx, self).__init__()
+        super(ChannelBasedEthTx, self).__init__()
 
     def get_required_message(self, source, target, service_id, method_id):
         '''
         检索期望消息
         '''
-        srcIP = self.appChannel[source]["ip"]
-        srcPort = self.appChannel[source]["port"]
-        dstIP = self.appChannel[target]["ip"]
-        dstPort = self.appChannel[target]["port"]
+        srcIP = self.ethAppChannel[source]["ip"]
+        srcPort = self.ethAppChannel[source]["port"]
+        dstIP = self.ethAppChannel[target]["ip"]
+        dstPort = self.ethAppChannel[target]["port"]
         while True:
             try:
                 msg_list = MessageRecorder.get_tmp_message_list((srcIP, dstIP, srcPort, dstPort))
@@ -58,10 +58,10 @@ class ChannelBasedTx(ChannelBased):
         '''
 
         # 监听本端给对端发的ACK消息
-        srcIP = self.appChannel[source]["ip"]
-        srcPort = self.appChannel[source]["port"]
-        dstIP = self.appChannel[target]["ip"]
-        dstPort = self.appChannel[target]["port"]
+        srcIP = self.ethAppChannel[source]["ip"]
+        srcPort = self.ethAppChannel[source]["port"]
+        dstIP = self.ethAppChannel[target]["ip"]
+        dstPort = self.ethAppChannel[target]["port"]
         msg_list = MessageRecorder.get_message_list((srcIP, dstIP, srcPort, dstPort))
         while len(msg_list) == 0:
             msg_list = MessageRecorder.get_message_list((srcIP, dstIP, srcPort, dstPort))
@@ -84,8 +84,8 @@ class ChannelBasedTx(ChannelBased):
         return self.eth_send(target, tx_data)
 
     def eth_send(self, target, txData):
-        ethSendStatus = self.dll.xlEthTransmit(self.portHandle, self.appChannel[target]["accessChannelMask"],
-                                               self.userHandle, byref(txData))
+        ethSendStatus = self.dll.xlEthTransmit(self.ethPortHandle, self.ethAppChannel[target]["accessChannelMask"],
+                                               self.ethUserHandle, byref(txData))
         rfic_info("xlEthTransmit:%s" % ethSendStatus)
         time.sleep(0.05)  # 报文发送之后，等待对端响应response
         if ethSendStatus == 0:

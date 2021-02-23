@@ -170,7 +170,7 @@ class T_XL_ETH_EVENT(Structure):
         ("size", c_uint),
         ("tag", c_ushort),
         ("channelIndex", c_ushort),
-        ("userHandle", c_uint),
+        ("ethUserHandle", c_uint),
         ("flagsChip", c_ushort),
         ("reserved", c_ushort),
         ("reserved1", c_uint64),

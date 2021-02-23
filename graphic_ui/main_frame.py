@@ -23,6 +23,7 @@ class MainFrame(QMainWindow):
 
 
         self.test_case_dict = load_modules_from_path()
+        print(self.test_case_dict)
         self.insert(list(self.test_case_dict.keys()))
 
         self.vn5640SettingBtn = QPushButton("VN5640配置", self)

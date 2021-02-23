@@ -22,7 +22,7 @@ class VN5640SettingController(VN5640Setting):
             nodeText = item.text()
             if self.itemModel.hasChildren():
                 resultDict[nodeText] = {
-                    "enabled": True if item.checkState()==2 else False
+                    "enabled": True if item.checkState() == 2 else False
                 }
                 self.traverse_recursive(item, resultDict[nodeText])
             else:
@@ -44,13 +44,12 @@ class VN5640SettingController(VN5640Setting):
         domTree = parse(xml_path)
         rootNode = domTree.documentElement
 
-
         params = self.get_tree_dict()
         for eth, values_dict in params.items():
             enabled = values_dict.get("enabled")
             for nodeName, value in values_dict.items():
                 if isinstance(value, dict):
-                    node = rootNode.getElementsByTagName(nodeName)[0] # ETH1
+                    node = rootNode.getElementsByTagName(nodeName)[0]  # ETH1
                     node.setAttribute("enabled", str(enabled))
                     node.getElementsByTagName("EthName")[0].setAttribute("ecuName", str(value["ECU name"]))
                     node.getElementsByTagName("IP")[0].childNodes[0].nodeValue = str(value["IP"])

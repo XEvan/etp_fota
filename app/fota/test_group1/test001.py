@@ -18,11 +18,11 @@ class Test001(FotaTester):
         # VN5640初始化
         rfic_info("初始化VN5640")
         if not debug:
-            self.xldriver_handle.reset()
+            self.xldriver_eth_handle.reset()
         # 开启消息监测
         rfic_info("开始消息流监听")
         if not debug:
-            self.xldriver_handle.eth_recv_monitor()
+            self.xldriver_eth_handle.eth_recv_monitor()
         # 台架上电
         rfic_info("台架上电")
         return True
@@ -36,12 +36,12 @@ class Test001(FotaTester):
 
         rfic_info("等待指定的s1消息。。。")
         if not debug:
-            status, target_params = self.xldriver_handle.get_required_message(src, dst, 0x0100, 0x3b)
+            status, target_params = self.xldriver_eth_handle.get_required_message(src, dst, 0x0100, 0x3b)
             rfic_info("收到期望消息:", str(target_params))
 
         rfic_info("断开原始通信链路")
         if not debug:
-            self.xldriver_handle.set_bypass_inactive_mode(src, dst)
+            self.xldriver_eth_handle.set_bypass_inactive_mode(src, dst)
 
         rfic_info("开始组包...")
         # 消息仿真与发送  -s
@@ -61,13 +61,13 @@ class Test001(FotaTester):
         rfic_info("消息发送指向:%s-->%s" % (src, dst))
 
         if not debug:
-            status = self.xldriver_handle.send_msg_as_method(src, dst, matrix)
+            status = self.xldriver_eth_handle.send_msg_as_method(src, dst, matrix)
             result_msg = "passed" if status else "failed"
             rfic_info("消息发送完成", result_msg)
 
         rfic_info("打开原始通信链路")
         if not debug:
-            self.xldriver_handle.set_bypass_mac_mode(src, dst)
+            self.xldriver_eth_handle.set_bypass_mac_mode(src, dst)
         # 消息仿真与发送  -e
 
         rfic_error("结果不符合预期")
@@ -79,10 +79,10 @@ class Test001(FotaTester):
     def tearDown(self):
         # 停止消息监测
         rfic_info("停止消息监测")
-        # self.xldriver_handle.terminate_monitor()
+        # self.xldriver_eth_handle.terminate_monitor()
         # xldriver恢复初始设置
         rfic_info("重置Vn5640")
-        # self.xldriver_handle.recovery()
+        # self.xldriver_eth_handle.recovery()
         # 台架下电
         rfic_info("台架下电")
 

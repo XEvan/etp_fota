@@ -7,12 +7,12 @@ from scapy.layers.inet import IP, TCP
 from aw_lib.xldriver_lib.xldriver_channelbased_lib.channelbased import ChannelBased, XLDefine
 from aw_lib.xldriver_lib.xldriver_channelbased_lib.channelbased_constants import ChannelBasedConstants
 from aw_lib.xldriver_lib.xldriver_channelbased_lib.message_recorder import MessageRecorder
-from aw_lib.xldriver_lib.xldriver_channelbased_lib.structures_rx import T_XL_ETH_EVENT
+from aw_lib.xldriver_lib.xldriver_channelbased_lib.eth_lib.structures_rx import T_XL_ETH_EVENT
 
 
-class ChannelBasedRx(ChannelBased):
+class ChannelBasedEthRx(ChannelBased):
     def __init__(self):
-        super(ChannelBasedRx, self).__init__()
+        super(ChannelBasedEthRx, self).__init__()
         self.eth_recv_thread = None
 
     def terminate_monitor(self):
@@ -35,12 +35,12 @@ class ChannelBasedRx(ChannelBased):
     def eth_recv_threading(self):
         receivedEvent = T_XL_ETH_EVENT()
         while True:  # 在时间内判读有没有消息读到
-            waitResult = self.net_driver.XL_WaitForSingleObject(self.notificationHandle.value, 1000)
-            # rc = win32event.WaitForSingleObject(self.notificationHandle.value, 1000)
+            waitResult = self.net_driver.XL_WaitForSingleObject(self.ethNotificationHandle.value, 1000)
+            # rc = win32event.WaitForSingleObject(self.ethNotificationHandle.value, 1000)
             if waitResult != XLDefine.WaitResults.WAIT_TIMEOUT and waitResult != -1:
                 ethReceiveStatus = XLDefine.XL_Status.XL_SUCCESS
                 while ethReceiveStatus != XLDefine.XL_Status.XL_ERR_QUEUE_IS_EMPTY:
-                    ethReceiveStatus = self.dll.xlEthReceive(self.portHandle,
+                    ethReceiveStatus = self.dll.xlEthReceive(self.ethPortHandle,
                                                              byref(receivedEvent))
                     # XL_ERR_QUEUE_IS_EMPTY = 10
                     if ethReceiveStatus == XLDefine.XL_Status.XL_SUCCESS and receivedEvent.tag != 8:
